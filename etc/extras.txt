@@ -1,0 +1,18 @@
+fmu mode_pwm
+pwm rate -a -r 400
+pwm min -a -p 1040
+pwm max -a -p 1860
+
+sleep 3
+
+gps stop
+mavlink stop-all
+mavlink start -d /dev/ttyS3 -b 115200 -m custom
+
+mavlink start -d /dev/ttyS0 -b 57600
+mavlink stream -d /dev/ttyS0 -s OPTICAL_FLOW -r 2
+
+mixer load /dev/pwm_output /etc/mixers/FMU_quad_x.mix
+
+# Exit nsh on ttyS0 or it will interfere with mavlink
+set EXIT_ON_END yes
